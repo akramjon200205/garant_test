@@ -10,6 +10,7 @@ class AppColors {
   static Color blue = const Color(0xff006FE5);
   static Color lightWhite = const Color(0xffF1F3F7);
   static Color textColor = const Color(0xff242424);
+  static Color orange = const Color(0xffFFA500);
 }
 
 // class BaseColor extends ColorSwatch<int> {

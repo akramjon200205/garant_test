@@ -25,9 +25,9 @@ class BackNextWidgetOnTest extends StatelessWidget {
         children: [
           backFunction == null
               ? const SizedBox.shrink()
-              : InkWell(
-                  onTap: backFunction,
-                  child: SvgPicture.asset(
+              : IconButton(
+                  onPressed: backFunction,
+                  icon: SvgPicture.asset(
                     Assets.icons.backIcon,
                   ),
                 ),
@@ -35,9 +35,9 @@ class BackNextWidgetOnTest extends StatelessWidget {
               "${activeIndex+=1}/${(context.read<TestBloc>().state.testModel?.resoult?.data?.length ?? 0)}"),
           nextFunction == null
               ? const SizedBox.shrink()
-              : InkWell(
-                  onTap: nextFunction,
-                  child: SvgPicture.asset(
+              : IconButton(
+                  onPressed: nextFunction,
+                  icon: SvgPicture.asset(
                     Assets.icons.nextIcon,
                   ),
                 ),

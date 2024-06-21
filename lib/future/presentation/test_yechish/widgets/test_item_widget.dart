@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:test_garant/future/common/app_colors.dart';
 import 'package:test_garant/future/common/app_text_styles.dart';
-import 'package:test_garant/future/common/material_button.dart';
+import 'package:test_garant/future/common/enums/option_status.dart';
 import 'package:test_garant/future/presentation/data/model/test_model.dart';
+import 'package:test_garant/future/presentation/test_yechish/widgets/option_widget.dart';
 
 // ignore: must_be_immutable
 class TestItemWidget extends StatefulWidget {
   TestItemWidget({
     super.key,
     required this.activeIndex,
-    required this.listData,
+    required this.data,
   });
 
   final int activeIndex;
-  Data? listData;
+  Data? data;
 
   @override
   State<TestItemWidget> createState() => _TestItemWidgetState();
@@ -58,7 +59,7 @@ class _TestItemWidgetState extends State<TestItemWidget>
                     ),
                   ),
                   Text(
-                    widget.listData?.question ?? '',
+                    widget.data?.question ?? '',
                     style: AppTextStyles.body15w4.copyWith(
                       color: AppColors.black,
                     ),
@@ -74,26 +75,12 @@ class _TestItemWidgetState extends State<TestItemWidget>
               style: AppTextStyles.body15w4.copyWith(
                 color: Colors.grey,
               ),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return OptionsWidget(
-                  option: widget.listData?.options?[index].option,
-
-                );
-              },
-              separatorBuilder: (context, index) {
-                return const SizedBox(
-                  height: 12,
-                );
-              },
-              itemCount: 3,
-            ),
+            ),            
+            widget.data != null
+                ? AllOptionsWidget(
+                    data: widget.data!,
+                  )
+                : const SizedBox.shrink(),
             const SizedBox(
               height: 30,
             ),
@@ -114,38 +101,60 @@ class _TestItemWidgetState extends State<TestItemWidget>
   bool get wantKeepAlive => true;
 }
 
-class OptionsWidget extends StatefulWidget {
-  String? option;  
-  OptionsWidget({super.key, this.option});
+class AllOptionsWidget extends StatefulWidget {
+  const AllOptionsWidget({
+    super.key,
+    required this.data,
+  });
+
+  final Data data;
 
   @override
-  State<OptionsWidget> createState() => _OptionsWidgetState();
+  State<AllOptionsWidget> createState() => _AllOptionsWidgetState();
 }
 
-class _OptionsWidgetState extends State<OptionsWidget> {
-  bool isChoose = false;
+class _AllOptionsWidgetState extends State<AllOptionsWidget> {
   @override
   Widget build(BuildContext context) {
-    return MaterialInkWellButton(
-      color: isChoose == true
-          // ignore: unrelated_type_equality_checks
-          ? AppColors.green
-          : AppColors.white,
-      function: () {
-        setState(() {
-          isChoose = true;
-        });
-        
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return OptionsWidget(
+          option: widget.data.options?[index].option,
+          onTap: () {
+            setState(() {
+              widget.data.selectedOption = widget.data.options?[index];
+            });
+            if (widget.data.selectedOption == null) {}
+          },
+          optionStatus: getOptionStatus(widget.data.options?[index]),
+        );
       },
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      borderRadius: BorderRadius.circular(10),
-      child: Text(
-        widget.option ?? '',
-        style: AppTextStyles.body16w7.copyWith(
-          color: AppColors.textColor,
-        ),
-        maxLines: 5,
-      ),
+      separatorBuilder: (context, index) {
+        return const SizedBox(
+          height: 12,
+        );
+      },
+      itemCount: 3,
     );
+  }
+
+  OptionStatus getOptionStatus(Options? option) {
+    if (widget.data.selectedOption == null) {
+      return OptionStatus.empty;
+    } else {
+      if (option?.status == "1") {
+        return OptionStatus.correct;
+      } else if (widget.data.selectedOption?.option == option?.option) {
+        if (option?.status == "1") {
+          return OptionStatus.correct;
+        } else {
+          return OptionStatus.inCorrect;
+        }
+      }
+    }
+
+    return OptionStatus.empty;
   }
 }

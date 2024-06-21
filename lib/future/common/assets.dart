@@ -27,6 +27,7 @@ class _Icons extends _AssetsHolder {
   String get profile => "$basePath/profile.svg"; 
   String get backIcon => "$basePath/back_icon.svg"; 
   String get nextIcon => "$basePath/next_icon.svg"; 
+  String get alertIcon => "$basePath/alert_icon.svg"; 
 }
 
 class _Images extends _AssetsHolder {

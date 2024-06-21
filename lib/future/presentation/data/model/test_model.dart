@@ -1,3 +1,4 @@
+
 class TestModel {
   bool? status;
   Resoult? resoult;
@@ -46,6 +47,7 @@ class Resoult {
 class Data {
   int? id;
   String? question;
+  Options? selectedOption;
   List<Options>? options;
   Data({this.id, this.question, this.options});
 

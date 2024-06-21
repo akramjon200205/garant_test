@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:test_garant/future/common/app_colors.dart';
 import 'package:test_garant/future/common/app_text_styles.dart';
 
+import '../../data/model/test_model.dart';
+
 class NavigateButtonsWidget extends StatelessWidget {
   const NavigateButtonsWidget({
     super.key,
     required this.activeIndex,
     required this.pageController,
     required this.scrollController,
-    required this.indexCount,
+    required this.listData,
   });
 
   final int activeIndex;
-  final int indexCount;
   final PageController pageController;
   final ScrollController scrollController;
+  final List<Data> listData;
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +30,11 @@ class NavigateButtonsWidget extends StatelessWidget {
             width: 10,
           );
         },
-        itemCount: indexCount,
+        itemCount: listData.length,
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          final bool isSelected = false;
           return InkWell(
             onTap: () {
               pageController.animateToPage(
@@ -48,11 +49,7 @@ class NavigateButtonsWidget extends StatelessWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: isSelected
-                    ? AppColors.blue
-                    : (activeIndex == index
-                        ? AppColors.green
-                        : AppColors.white),
+                color: getIndicatorColor(index),
               ),
               child: Text(
                 "${index + 1}",
@@ -65,5 +62,20 @@ class NavigateButtonsWidget extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Color getIndicatorColor(int index) {
+    if (activeIndex == index) {
+      return AppColors.blue;
+    }
+    if (listData[index].selectedOption == null) {
+      return AppColors.white;
+    } else {
+      if (listData[index].selectedOption?.status == "1") {
+        return AppColors.green;
+      } else {
+        return AppColors.red;
+      }
+    }
   }
 }

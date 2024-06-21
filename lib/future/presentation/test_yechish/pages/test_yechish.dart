@@ -5,6 +5,8 @@ import 'package:test_garant/future/common/app_text_styles.dart';
 import 'package:test_garant/future/common/assets.dart';
 import 'package:test_garant/future/common/enums/bloc_status.dart';
 import 'package:test_garant/future/presentation/data/model/test_model.dart';
+import 'package:test_garant/future/presentation/home/home_page.dart';
+import 'package:test_garant/future/presentation/main/main_menu.dart';
 import 'package:test_garant/future/presentation/test_yechish/bloc/test_bloc.dart';
 import 'package:test_garant/future/presentation/test_yechish/widgets/back_next_widget_on_test.dart';
 import 'package:test_garant/future/presentation/test_yechish/widgets/navigation_button_widget.dart';
@@ -21,9 +23,8 @@ class TestYechishPage extends StatefulWidget {
 class _TestYechishPageState extends State<TestYechishPage> {
   late PageController pageController;
   late ScrollController indicatorController;
-  int activeIndex = 0;
 
-  
+  int activeIndex = 0;
 
   @override
   void initState() {
@@ -77,7 +78,9 @@ class _TestYechishPageState extends State<TestYechishPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          _showAlertDialog(context);
+                        },
                         child: SvgPicture.asset(
                           Assets.icons.close,
                         ),
@@ -120,7 +123,7 @@ class _TestYechishPageState extends State<TestYechishPage> {
                 scrollController: indicatorController,
                 activeIndex: activeIndex,
                 pageController: pageController,
-                indexCount: state.testModel?.resoult?.data?.length ?? 0,
+                listData: state.testModel?.resoult?.data ?? [],
               ),
               const SizedBox(
                 height: 24,
@@ -133,7 +136,7 @@ class _TestYechishPageState extends State<TestYechishPage> {
                     state.testModel?.resoult?.data?.length ?? 0,
                     (index) => TestItemWidget(
                       activeIndex: activeIndex,
-                      listData: state.testModel?.resoult?.data?[index],                      
+                      data: state.testModel?.resoult?.data?[index],
                     ),
                   ),
                 ),
@@ -155,7 +158,7 @@ class _TestYechishPageState extends State<TestYechishPage> {
                           _animateToPage(++activeIndex);
                         }
                       },
-                      activeIndex: activeIndex,
+                activeIndex: activeIndex,
               ),
               const SizedBox(
                 height: 30,
@@ -163,26 +166,6 @@ class _TestYechishPageState extends State<TestYechishPage> {
             ],
           );
         },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(Assets.icons.home),
-            label: "Asosiy",
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(Assets.icons.qoidalar),
-            label: "Qoidalar",
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(Assets.icons.test),
-            label: "Test",
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(Assets.icons.profile),
-            label: "Profile",
-          ),
-        ],
       ),
     );
   }
@@ -201,6 +184,81 @@ class _TestYechishPageState extends State<TestYechishPage> {
       index,
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeIn,
+    );
+  }
+
+  void _showAlertDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Column(
+            children: [
+              SvgPicture.asset(Assets.icons.alertIcon),
+              const SizedBox(height: 16),
+              Text(
+                'Haqiqatda ham testni yakunlashni hohlaysizmi?',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.body15w4.copyWith(color: Colors.grey),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Belgilanmagan test javoblari xato deb hisobga olinadi',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.body14w5.copyWith(
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.grey[200],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Qaytish',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {                
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const MainPage(initialPage: 0);
+                    },
+                  ),
+                );
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Yakunlash',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

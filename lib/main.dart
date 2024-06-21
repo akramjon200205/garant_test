@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_garant/future/di/di.dart' as sl;
 import 'package:test_garant/future/di/di.dart';
+import 'package:test_garant/future/presentation/main/main_menu.dart';
 import 'package:test_garant/future/presentation/test_yechish/bloc/test_bloc.dart';
 import 'package:test_garant/future/presentation/test_yechish/pages/test_yechish.dart';
 
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: TestYechishPage(),
+        home: MainPage(),
       ),
     );
   }
